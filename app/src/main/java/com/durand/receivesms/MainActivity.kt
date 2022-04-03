@@ -6,18 +6,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.provider.Telephony
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import java.lang.Double.parseDouble
 
 class MainActivity : AppCompatActivity() {
 
     private val requestReceiveSms = 111
-    private var smsMessage: String = "Tu codigo de Cambix es 568686. No lo compartas"
+    private var smsMessage: String = "Attente de SMS"
     private var textView: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             receiveMsg()
         }
         // Capturar posiciones
-        textView!!.text = smsMessage.substring(23, 29)
+        textView!!.text = smsMessage
     }
 
     override fun onRequestPermissionsResult(
@@ -51,13 +49,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun receiveMsg() {
-        var br = object : BroadcastReceiver() {
+        val br = object : BroadcastReceiver() {
             override fun onReceive(p0: Context?, p1: Intent?) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
-                        smsMessage = sms.displayMessageBody.toString()
-                        textView!!.text = smsMessage.substring(23, 29)
-                    }
+                for (sms in Telephony.Sms.Intents.getMessagesFromIntent(p1)) {
+                    smsMessage = sms.displayMessageBody.toString()
+                    textView!!.text = smsMessage
                 }
             }
 
